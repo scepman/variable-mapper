@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+        with:
+          persist-credentials: false
       - run: git fetch --prune --unshallow --tags
       - uses: kanga333/config-value-exporter@main
         id: version
@@ -21,12 +23,14 @@ jobs:
           file: package.json
       - id: tag_check
         run: |
-          git rev-parse v${{steps.version.outputs.result}} 2> /dev/null \
+          git rev-parse v${STEPS_VERSION_OUTPUTS_RESULT} 2> /dev/null \
             || echo 'exist=false' >> $GITHUB_OUTPUT
+        env:
+          STEPS_VERSION_OUTPUTS_RESULT: ${{steps.version.outputs.result}}
       - name: Create Release
         if: steps.tag_check.outputs.exist == 'false'
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1.1.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

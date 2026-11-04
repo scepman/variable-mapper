@@ -9,8 +9,10 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: ./
+    - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+      with:
+        persist-credentials: false
+    - uses: $/
       id: run_action
       with:
         key: "keyB"
@@ -35,12 +37,16 @@ jobs:
         export_to: log,env,output
     - name: 'Test Actions Parameters'
       run: |
-        test "${{env.env1B}}" = "value1B"
-        test "${{env.env2B}}" = "value2B"
-        test "${{env.env3B}}" = "value3B"
-        test "${{steps.run_action.outputs.env1B}}" = "value1B"
-        test "${{steps.run_action.outputs.env2B}}" = "value2B"
-        test "${{steps.run_action.outputs.env3B}}" = "value3B"
+        test "${env1B}" = "value1B"
+        test "${env2B}" = "value2B"
+        test "${env3B}" = "value3B"
+        test "${STEPS_RUN_ACTION_OUTPUTS_ENV1B}" = "value1B"
+        test "${STEPS_RUN_ACTION_OUTPUTS_ENV2B}" = "value2B"
+        test "${STEPS_RUN_ACTION_OUTPUTS_ENV3B}" = "value3B"
+      env:
+        STEPS_RUN_ACTION_OUTPUTS_ENV1B: ${{steps.run_action.outputs.env1B}}
+        STEPS_RUN_ACTION_OUTPUTS_ENV2B: ${{steps.run_action.outputs.env2B}}
+        STEPS_RUN_ACTION_OUTPUTS_ENV3B: ${{steps.run_action.outputs.env3B}}
   test-readme-example1:
     runs-on: ubuntu-latest
     steps:
@@ -66,7 +72,7 @@ jobs:
             }
           }
     - name: Echo environment
-      run: echo ${{ env.environment }}
+      run: echo ${environment}
   test-readme-example2:
     runs-on: ubuntu-latest
     steps:
@@ -86,13 +92,17 @@ jobs:
         export_to: env,log,output
     - name: Echo environment and output
       run: |
-        echo ${{ env.environment }}
-        echo ${{ steps.export.outputs.environment }}
+        echo ${environment}
+        echo ${STEPS_EXPORT_OUTPUTS_ENVIRONMENT}
+      env:
+        STEPS_EXPORT_OUTPUTS_ENVIRONMENT: ${{ steps.export.outputs.environment }}
   test-readme-example3:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: ./
+    - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+      with:
+        persist-credentials: false
+    - uses: $/
       id: export
       with:
         key: "first"
@@ -111,14 +121,16 @@ jobs:
         mode: first_match
     - name: Echo environment and output
       run: |
-        test "${{ env.env1 }}" = "value1"
-        test "${{ env.env2 }}" = "value2"
-        test "${{ env.env3 }}" = ""
+        test "${env1}" = "value1"
+        test "${env2}" = "value2"
+        test "${env3}" = ""
   test-readme-example4:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: ./
+    - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+      with:
+        persist-credentials: false
+    - uses: $/
       id: export
       with:
         key: "first"
@@ -137,14 +149,16 @@ jobs:
         mode: overwrite
     - name: Echo environment and output
       run: |
-        test "${{ env.env1 }}" = "value1_overwrite"
-        test "${{ env.env2 }}" = "value2"
-        test "${{ env.env3 }}" = "value3"
+        test "${env1}" = "value1_overwrite"
+        test "${env2}" = "value2"
+        test "${env3}" = "value3"
   test-readme-example5:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: ./
+    - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+      with:
+        persist-credentials: false
+    - uses: $/
       id: export
       with:
         key: "first"
@@ -163,6 +177,6 @@ jobs:
         mode: fill
     - name: Echo environment and output
       run: |
-        test "${{ env.env1 }}" = "value1"
-        test "${{ env.env2 }}" = "value2"
-        test "${{ env.env3 }}" = "value3"
+        test "${env1}" = "value1"
+        test "${env2}" = "value2"
+        test "${env3}" = "value3"
